@@ -3,6 +3,7 @@ package com.sparta.hhblog.controller;
 import com.sparta.hhblog.Entity.Article;
 import com.sparta.hhblog.dto.ArticleRequestDto;
 import com.sparta.hhblog.service.ArticleService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -42,15 +43,18 @@ public class ArticleController {
 
     // 게시글 수정
     @PutMapping("/api/articles/{id}")
-    public String  updateArticle(@PathVariable Long id, @RequestBody ArticleRequestDto requestDto) {
+    public String updateArticle(@PathVariable Long id, @RequestBody ArticleRequestDto requestDto) {
         return articleService.update(id, requestDto);
     }
 
-
     // 게시글 삭제
     @DeleteMapping("/api/articles/{id}")
-    public String deleteArticle(@PathVariable Long id) {
-        return articleService.deleteArticle(id);
+    public String deleteArticle(@PathVariable Long id, HttpServletRequest request) {
+        String password = request.getParameter("password");
+        if (password == null || password.isEmpty()) {
+            return "비밀번호를 입력해주세요.";
+        }
+        return articleService.deleteArticle(id, password);
     }
 
 }
