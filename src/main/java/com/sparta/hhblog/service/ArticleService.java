@@ -49,17 +49,21 @@ public class ArticleService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         } else {
             article.update(requestDto);
+            return article.getId() + "번 글이 수정되었습니다.";
         }
-        return article.getId() + "번 글이 수정되었습니다.";
     }
 
     // 게시글 삭제
     @Transactional
-    public String deleteArticle(Long id) {
+    public String deleteArticle(Long id, String password) {
         Article article = articleRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("글이 존재하지 않습니다.")
         );
-        articleRepository.deleteById(id);
-        return id + "번 글이 삭제되었습니다.";
+        if (!article.getPassword().equals(password)) {
+            return "비밀번호가 일치하지 않습니다.";
+        } else {
+            articleRepository.deleteById(id);
+            return id + "번 글이 삭제되었습니다.";
+        }
     }
 }
