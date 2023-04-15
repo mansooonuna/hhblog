@@ -42,14 +42,14 @@ public class ArticleController {
 
     // 게시글 수정
     @PutMapping("/api/articles/{id}")
-    public Long updateArticle(@PathVariable Long id, @RequestBody ArticleRequestDto requestDto) {
+    public String  updateArticle(@PathVariable Long id, @RequestBody ArticleRequestDto requestDto) {
         return articleService.update(id, requestDto);
     }
 
 
     // 게시글 삭제
     @DeleteMapping("/api/articles/{id}")
-    public Long deleteArticle(@PathVariable Long id) {
+    public String deleteArticle(@PathVariable Long id) {
         return articleService.deleteArticle(id);
     }
 
