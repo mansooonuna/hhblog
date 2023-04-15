@@ -1,5 +1,6 @@
 package com.sparta.hhblog.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.hhblog.dto.ArticleRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,23 +23,33 @@ public class Article extends Timestamped {
     @Column(nullable = false)
     private String contents;        // 작성 내용
 
+    @Column(nullable = false)       // 글 비밀번호
+    @JsonIgnore
+    private String password;
+
+
     // 기본 생성자
-    public Article(String title, String writerName, String contents) {
+    public Article(String title, String writerName, String contents, String password) {
         this.title = title;
         this.writerName = writerName;
         this.contents = contents;
+        this.password = password;
     }
 
-    // dto 생성자
+    // dto 생성
     public Article(ArticleRequestDto requestDto) {
         this.title = requestDto.getTitle();
-        this.writerName = requestDto.getWriterName();
+        this.writerName = requestDto.getAuthor();
         this.contents = requestDto.getContents();
+        this.password = requestDto.getPassword();
     }
 
+    // 글 수정
     public void update(ArticleRequestDto requestDto) {
         this.title = requestDto.getTitle();
-        this.writerName = requestDto.getWriterName();
+        this.writerName = requestDto.getAuthor();
         this.contents = requestDto.getContents();
+        this.password = requestDto.getPassword();
     }
+
 }

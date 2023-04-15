@@ -17,13 +17,13 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     // 게시물 전체 조회 - 내림차순으로
-    @Transactional (readOnly = true)
+    @Transactional(readOnly = true)
     public List<Article> getArticles() {
-        return articleRepository.findAllByOrderByModifiedAtDesc();
+        return articleRepository.findAllByOrderByCreatedAtDesc();
     }
 
     // 게시글 세부 조회
-    @Transactional (readOnly = true)
+    @Transactional(readOnly = true)
     public Article getArticle(Long id) {
         Article article = articleRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("글이 존재하지 않습니다.")
@@ -41,17 +41,25 @@ public class ArticleService {
 
     // 게시글 수정
     @Transactional
-    public Long update(Long id, ArticleRequestDto requestDto) {
+    public String update(Long id, ArticleRequestDto requestDto) {
         Article article = articleRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("글이 존재하지 않습니다.")
         );
-        article.update(requestDto);
-        return article.getId();
+        if (!requestDto.getPassword().equals(article.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        } else {
+            article.update(requestDto);
+        }
+        return article.getId() + "번 글이 수정되었습니다.";
     }
 
+    // 게시글 삭제
     @Transactional
-    public Long deleteArticle(Long id) {
+    public String deleteArticle(Long id) {
+        Article article = articleRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("글이 존재하지 않습니다.")
+        );
         articleRepository.deleteById(id);
-        return id;
+        return id + "번 글이 삭제되었습니다.";
     }
 }

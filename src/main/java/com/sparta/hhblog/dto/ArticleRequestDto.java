@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public class ArticleRequestDto {
     private String title;
-    private String writerName;
+    private String author;
     private String contents;
+    private String password;
 }
